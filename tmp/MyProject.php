@@ -20,3 +20,4 @@ namespace\func(); // вызывает функцию MyProject\func()
 namespace\Cname::method(); // вызывает статический метод  класса MyProject\cname
 
 $a = new namespace\Cname(); // Создает экземпляр класса MyProject\Cname
+
