@@ -24,3 +24,8 @@ Route::get(
         'uses' => 'PostController@show', 'as' => 'show'
         ]
 );
+
+Route::get('news', 'PostController@getLatestPosts');
+
+Route::get('latest', 'PostController@latestPost');
+Route::get('oldest', 'PostController@oldestPost');
