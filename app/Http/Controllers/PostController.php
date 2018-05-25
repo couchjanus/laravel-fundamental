@@ -20,6 +20,8 @@ class PostController extends Controller
         // $posts = DB::table('posts')->paginate(10);
         // $posts = DB::table('posts')->simplePaginate(10);
         // dd($posts);
+        
+
         return view('blog.index', ['posts' => $posts]);
         // return view('blog.index8', ['posts' => $posts]);
         // return view('blog.index9', compact('posts'));
@@ -36,7 +38,12 @@ class PostController extends Controller
         //         ->limit(5)
         //         ->get();
 
-        $posts = DB::table('posts')->orderBy('id', 'desc')->get();
+        $posts = App\Post::where('status', 1)
+               ->orderBy('id', 'desc')
+               ->take(10)
+               ->get();
+
+        // $posts = DB::table('posts')->orderBy('id', 'desc')->get();
         return view('blog.index', ['posts' => $posts]);
     }
 
@@ -56,27 +63,7 @@ class PostController extends Controller
         return view('blog.show', ['post' => $post]);
     }
    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
+    
     /**
      * Display the specified resource.
      *
@@ -88,10 +75,19 @@ class PostController extends Controller
         //
         // $post = DB::select("select * from posts where id = :id", ['id' => $id]);
         // $post = DB::table('posts')->where('id', '=', $id)->first();
-        $post = DB::table('posts')->where('id', $id)->first();
+        // $post = DB::table('posts')->where('id', $id)->first();
         
         // $title = DB::table('posts')->where('id', $id)->value('title');
-        return view('blog.show', ['post' => $post]);
+        // try {
+            $post = Post::findOrFail($id);
+            return view('blog.show')->with('post', $post);
+
+        // } catch(ModelNotFoundException $e) {
+            // return \Redirect::route('blog.index')
+            //             ->withMessage('Record not found');
+        // }
+
+        // return view('blog.show', ['post' => $post]);
         // return view('blog.show1', ['post' => $post]);
         // return view('blog.show2', ['post' => $post, 'hescomment' => true ]);
     }

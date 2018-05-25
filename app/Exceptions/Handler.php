@@ -5,6 +5,10 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -46,6 +50,34 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // if ($exception instanceof ModelNotFoundException)
+
+        // // check if exception is an instance of ModelNotFoundException.
+        // if ($exception instanceof ModelNotFoundException) {
+        //     // ajax 404 json feedback
+        //     if ($request->ajax()) {
+        //         return response()->json(['error' => 'Not Found'], 404);
+        //     }
+        //     // normal 404 view page feedback
+        //     return response()->view('errors.missing', ['error' => 'The resource you are looking for could not be found'], 404);
+        // }
+
+
+         //check if exception is an instance of ModelNotFoundException.
+        //or NotFoundHttpException
+        if ($exception instanceof ModelNotFoundException or $exception instanceof NotFoundHttpException) {
+            // ajax 404 json feedback
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Not Found'], 404);
+            }
+            // normal 404 view page feedback
+            return response()->view('errors.missing', ['error' => 'The resource you are looking for could not be found'], 404);
+        }
+            
+        // if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+        //     // Ваша логика для ненайденной модели...
+        //     abort(404, 'The resource you are looking for could not be found');
+        // }
         return parent::render($request, $exception);
     }
 }
