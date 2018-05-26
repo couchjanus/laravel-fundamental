@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -43,28 +44,10 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        // Проверка запроса...
-
-        $category = new Category;
-
-        $category->name = $request->name;
-        $category->description = $request->description;
-
-        $category->save();
-
-
-        // Получить category по атрибутам или создать, если она не существует...
-        // $category = Category::firstOrCreate(['name' => $request->name, 'description'=>$request->description]);
-
-
-        // Получить, или создать новый экземпляр...
-        // $category = Category::firstOrNew(['name' => $request->name, 'description'=>$request->description]);
-
-        // $category->save();
-
-        return redirect(route('categories.index'))->with('message','An category has been added');
+        $category = Category::create($request->all());
+        return redirect(route('categories.index'))->with('success','An category has been added');
     }
 
     /**

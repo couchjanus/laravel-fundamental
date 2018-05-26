@@ -23,12 +23,12 @@
          <form action="" method="post" class="form-horizontal">
            <div class="row form-group">
              <div class="col col-md-3"><label for="name" class=" form-control-label">Name</label></div>
-             <div class="col-12 col-md-9"><input type="text" id="name" name="name" value="{{$category->name}}" class="form-control" disabled></div>
+             <div class="col-12 col-md-9"><input type="text" id="name" name="name" value="{{$tag->name}}" class="form-control" disabled></div>
            </div>
            <div class="row form-group">
              <div class="col col-md-3"><label for="description" class=" form-control-label">Description</label></div>
              <div class="col-12 col-md-9">
-               <input type="text" id="description" name="description" value="{{$category->description}}" disabled class="form-control">
+               <input type="text" id="description" name="description" value="{{$tag->description}}" disabled class="form-control">
                </div>
            </div>
          </form>
