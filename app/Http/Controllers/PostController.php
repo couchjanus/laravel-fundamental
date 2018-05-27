@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use DB;
-
 class PostController extends Controller
 {
     /**
@@ -15,17 +14,11 @@ class PostController extends Controller
      */
     public function index()
     {
+     
         // $posts = DB::select('select * from posts');
-        $posts = DB::table('posts')->get();
-        // $posts = DB::table('posts')->paginate(10);
-        // $posts = DB::table('posts')->simplePaginate(10);
+        $posts = DB::table('posts')->paginate(5);
         // dd($posts);
-        
-
-        return view('blog.index', ['posts' => $posts]);
-        // return view('blog.index8', ['posts' => $posts]);
-        // return view('blog.index9', compact('posts'));
-        
+        return view('blog.index', ['posts'=>$posts]);
     }
 
     public function getLatestPosts()
@@ -38,135 +31,90 @@ class PostController extends Controller
         //         ->limit(5)
         //         ->get();
 
-        $posts = App\Post::where('status', 1)
-               ->orderBy('id', 'desc')
-               ->take(10)
-               ->get();
-
         // $posts = DB::table('posts')->orderBy('id', 'desc')->get();
+        $posts = DB::table('posts')->latest()->take(10)->get();
+        // $posts = DB::table('posts')->whereNotIn('category_id', [1, 3])
+        // ->get();
+
         return view('blog.index', ['posts' => $posts]);
     }
 
-    public function latestPost()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $post = DB::table('posts')
-                ->latest()
-                ->first();
-        return view('blog.show', ['post' => $post]);
+        //
     }
 
-    public function oldestPost()
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        $post = DB::table('posts')
-            ->oldest()
-            ->first();
-        return view('blog.show', ['post' => $post]);
+        //
     }
-   
-    
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showById($id)
     {
         //
         // $post = DB::select("select * from posts where id = :id", ['id' => $id]);
         // $post = DB::table('posts')->where('id', '=', $id)->first();
-        // $post = DB::table('posts')->where('id', $id)->first();
+        $post = DB::table('posts')->where('id', $id)->first();
         
         // $title = DB::table('posts')->where('id', $id)->value('title');
-        // try {
-            $post = Post::findOrFail($id);
-            return view('blog.show')->with('post', $post);
-
-        // } catch(ModelNotFoundException $e) {
-            // return \Redirect::route('blog.index')
-            //             ->withMessage('Record not found');
-        // }
-
-        // return view('blog.show', ['post' => $post]);
+        return view('blog.show', ['post' => $post]);
         // return view('blog.show1', ['post' => $post]);
         // return view('blog.show2', ['post' => $post, 'hescomment' => true ]);
     }
-
-    public function getPosts()
-    {
-        // $posts = DB::table('posts')
-        //         ->where('id', '>=', 100)
-        //         ->get();
-
-        // $posts = DB::table('posts')
-        //                 ->where('id', '<>', 100)
-        //                 ->get();
-
-        // $posts = DB::table('posts')
-        //                 ->where('title', 'like', 'T%')
-        //                 ->get();
-
-        // $posts = DB::table('posts')->where([
-        //     ['status', '=', '1'],
-        //     ['id', '>', '100'],
-        // ])->get();
+ 
 
 
-        // $posts = DB::table('posts')
-        //             ->where('id', '>', 100)
-        //             ->orWhere('status', true)
-        //             ->get();
-        
-        // $posts = DB::table('posts')
-        //     ->whereBetween('id', [1, 100])->get();
+// PostsController, метод showBySlug:
+public function show($slug)
+{
+       /**
+        * Вначале мы проверяем, не является ли слаг числом.
+        * Часто слаги внедряют в программу уже после того,
+        * как был другой механизм построения пути.
+        * Например, через числовые индексы.
+        * Тогда может получится ситуация, что пользователь,
+        * зайдя на сайт по старой ссылке, увидит 404 ошибку,
+        * что такой страницы не существует.
+       */
+      if (is_numeric($slug)) {
+       
+        // Get post for slug.
+            $post = Post::findOrFail($slug);
+              
+            return Redirect::to(route('blog.show', $post->slug), 301);
+             // 301 редирект со старой страницы, на новую.   
+           
+        }
 
-        // $posts = DB::table('posts')
-        //     ->whereNotBetween('id', [1, 100])
-        //     ->get();
+        // Get post for slug.
+        $post = Post::whereSlug($slug)->firstOrFail();
 
-        // $posts = DB::table('posts')
-        //     ->whereIn('category_id', [1, 2, 3])
-        //     ->get();
-        
-        // $posts = DB::table('posts')
-        //     ->whereNotIn('category_id', [1, 2, 3])
-        //     ->get();
-        
-        // $posts = DB::table('posts')
-        //     ->whereNull('updated_at')
-        //     ->get();
-        
-        // $posts = DB::table('posts')
-        //     ->whereNotNull('updated_at')
-        //     ->get();
+        return view('blog.show', [
+           'post' => $post,
+           'hescomment' => true
+           ]
+       );
+   }
 
-        // $posts = DB::table('posts')
-        //     ->whereDate('created_at', '2018-05-17')
-        //     ->get();
-        // $posts = DB::table('posts')
-        //     ->whereMonth('created_at', '05')
-        //     ->get();
-        
-        // $posts = DB::table('posts')
-        //     ->whereDay('created_at', '18')
-        //     ->get();
-
-        // $posts = DB::table('posts')
-        //     ->whereYear('created_at', '2018')
-        //     ->get();
-        // $posts = DB::table('posts')
-        //     ->whereColumn('updated_at', '>', 'created_at')
-        //     ->get();
-
-        return view('blog.index', ['posts' => $posts]);
-    }
-
-
-    public function getTitle($id)
-    {
-        $title = DB::table('posts')->where('id', $id)->value('title');
-        return $title;
-    }
+           
+    
 
     /**
      * Show the form for editing the specified resource.
