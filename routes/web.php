@@ -11,47 +11,16 @@
 |
 */
 
-Route::get(
-    '/', function () {
-        return view('welcome');
-    }
-);
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/about', 'AboutController')->name('about');
+Route::get('/blog', 'PostController@index')->name('blog');
+Route::get('/blog/{slug}', 'PostController@show')->name('show');
+Route::get('/news', 'PostController@getLatestPosts')->name('news');
 
-Route::get('blog', 'PostController@index');
-
-Route::get(
-    'blog/{id}', [
-        'uses' => 'PostController@show', 'as' => 'show'
-        ]
-);
-Route::get('latest', 'PostController@latestPost');
-// Route::get('oldest', 'PostController@oldestPost');
-
-// Route::get('blog/popular', 'PostController@popular');
-// Route::resource(
-//     'blog', 'PostController', [
-//         'only' => [
-//             'index', 'show'
-//         ]
-//     ]
-// );
-
-// Route::resource(
-//     'blog', 'PostController', [
-//         'except' => [
-//             'create', 'store', 'update', 'destroy'
-//         ]
-//     ]
-// );
-
-
-
-Route::get('admin', 'Admin\DashboardController');
-
-
-// Зарегистрировать маршрут контроллера ресурса:
-
-Route::resource('admin/posts', 'Admin\PostController');
+Route::get('contact', 'ContactController@index')->name('contactus');
+Route::get('admin', 'Admin\DashboardController')->name('contactus');
 
 
 Route::get('admin/categories/trashed', 'Admin\CategoryController@getOnlyTrashed')->name('categories.trashed');
@@ -59,19 +28,5 @@ Route::get('admin/categories/restore/{id}', 'Admin\CategoryController@restore')-
 Route::get('admin/categories/clear/{id}', 'Admin\CategoryController@clear')->name('categories.clear');
 
 Route::resource('admin/categories', 'Admin\CategoryController');
-
 Route::resource('admin/tags', 'Admin\TagController');
-
-// Route::resource(
-//     'posts', 'Admin\PostController', ['names' => [
-//     'create' => 'posts.build',
-//     'destroy' => 'posts.delete'
-//     ]]
-// );
-
-
-// Route::resource(
-//     'posts', 'AdminUserController', ['parameters' => [
-//     'posts' => 'admin_posts'
-//     ]]
-// );
+Route::resource('admin/posts', 'Admin\PostController');
