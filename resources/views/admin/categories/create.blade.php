@@ -30,6 +30,11 @@
              <div class="col col-md-3"><label for="name" class=" form-control-label">Name</label></div>
              <div class="col-12 col-md-9"><input type="text" id="name" name="name" placeholder="Enter name..." class="form-control"><span class="help-block">Please enter name</span></div>
            </div>
+           @include('admin.partials.form.checkbox', [
+               'name' => 'active',
+               'checked' => ''
+           ])
+
            <div class="row form-group">
              <div class="col col-md-3"><label for="description" class=" form-control-label">Description</label></div>
              <div class="col-12 col-md-9">

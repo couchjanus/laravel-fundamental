@@ -20,7 +20,7 @@ Route::get(
 Route::get('blog', 'PostController@index');
 
 Route::get(
-    'blog/{id}', [
+    'blog/{slug}', [
         'uses' => 'PostController@show', 'as' => 'show'
         ]
 );
@@ -44,9 +44,34 @@ Route::get('latest', 'PostController@latestPost');
 //     ]
 // );
 
+// Можно использовать метод middleware для назначения посредника на маршрут:
+
+// Route::get('admin', 'Admin\DashboardController')->middleware('auth');
+ 
+// Для назначения нескольких посредников для маршрута:
+
+// Route::get('admin', 'Admin\DashboardController')->middleware('auth', 'admin');
+  
+// можете использовать ключ middleware в массиве параметров маршрута:
+  
+// Route::get(
+//     'admin', [
+//         'uses' => 'Admin\DashboardController', 'as' => 'admin', 'middleware' => 'auth'
+//         ]
+// );
+
+// Используйте массив для назначения нескольких посредников для маршрута:
+
+// Route::get(
+//     'admin', [
+//         'uses' => 'Admin\DashboardController', 'as' => 'admin', 'middleware' => ['auth', 'admin']
+//         ]
+// );
 
 
-Route::get('admin', 'Admin\DashboardController');
+// Вместо использования массива вы можете использовать сцепку метода middleware() с определением маршрута:
+
+Route::get('admin', 'Admin\DashboardController')->middleware(['auth', 'admin']);
 
 
 // Зарегистрировать маршрут контроллера ресурса:
@@ -75,3 +100,10 @@ Route::resource('admin/tags', 'Admin\TagController');
 //     'posts' => 'admin_posts'
 //     ]]
 // );
+
+Route::get('/contact', 'ContactController@index');
+Route::post('/contact', 'ContactController@store')->name('contact');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

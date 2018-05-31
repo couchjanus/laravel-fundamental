@@ -113,10 +113,17 @@ class TagController extends Controller
      * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    // public function update(Request $request, Tag $tag)
+    // {
+        
+    // }
+
+    public function update(Request $request, $id)
     {
-        //
+        Tag::updateData($id);
+        return redirect(route('tags.index'))->with('success','An tag has been updated');
     }
+
 
     /**
      * Remove the specified resource from storage.

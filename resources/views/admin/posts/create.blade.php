@@ -58,6 +58,22 @@
            </div>
 
            <div class="row form-group">
+              <div class="col col-md-3">
+                {!! Form::label('tags', 'Select Tags', ['class' => 'form-control-label']) !!}
+              </div>
+              <div class="col-12 col-md-9">
+              <select name="tags[]" id="tags" class="form-control state-tags-multiple" multiple="multiple">
+              @foreach($tags as $key => $value)
+                <option value="{{ $key }}"
+                 {{ (collect(old('tags'))->contains($key)) ? 'selected':'' }}  />
+                 {{ $value }}
+                </option>
+              @endforeach
+              </select>
+            </div>
+            </div>
+
+           <div class="row form-group">
              <div class="col col-md-3">
                {!! Form::label('content', 'Content', ['class' => 'form-control-label']) !!}
              </div>
@@ -84,4 +100,19 @@
      </div>
 
 </div>
+@endsection
+
+@section('scripts')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/js/select2.min.js"></script>
+<script>
+
+        $('#tags').select2({
+            allowClear: true,
+            placeholder: "Choose a tags",
+        });
+
+</script>
+
 @endsection

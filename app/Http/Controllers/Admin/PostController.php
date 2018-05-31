@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -17,10 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // Показать список всех доступных posts.
-        // Метод all() в Eloquent возвращает все результаты из таблицы модели.
         $posts = Post::paginate(10);
-
         $title = "Post List";
         $breadcrumbs = ['Dashboard'=>'/admin', 'Publication List'=>'#'];
 
@@ -35,11 +33,12 @@ class PostController extends Controller
      */
     public function create()
     {
-      $title = "New Post";
-      $categories = Category::pluck('name', 'id');
-      $breadcrumbs = ['Dashboard'=>'/admin', 'Publication List'=>'/admin/posts', 'New Post'=>'#'];
+        $title = "New Post";
+        $categories = Category::pluck('name', 'id');
+        $tags = Tag::pluck('name', 'id');
+        $breadcrumbs = ['Dashboard'=>'/admin', 'Publication List'=>'/admin/posts', 'New Post'=>'#'];
 
-      return view('admin.posts.create', ['title' => $title, 'breadcrumbs'=>$breadcrumbs, 'categories'=>$categories]);
+        return view('admin.posts.create', ['title' => $title, 'breadcrumbs'=>$breadcrumbs, 'categories'=>$categories, 'tags' => $tags]);
     }
 
     /**
@@ -50,21 +49,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:posts|max:255',
-            'content' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect(route('posts.index'))
-                        ->withErrors($validator)
-                        ->withInput();
-        }
 
         // Store the blog post...
-        $post = Post::create($request->all());
 
+        $post = new Post();
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->category_id = $request->category_id;
+        $post->is_active = $request->has('is_active');
+
+        $post->save();
+
+        // $post->tags()->sync($request->input('tags'), false);
+        
+        $post->tags()->syncWithoutDetaching($request->tags);
+        
         return redirect(route('posts.index'))->with('success', 'An post has been added');
     }
 
@@ -85,9 +84,14 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $title = "Edit Post";
+        $categories = Category::select('id', 'name')->pluck('name', 'id');
+        $tags = Tag::orderBy('name')->pluck('name', 'id');
+        $post = Post::find($id);
+        $breadcrumbs = ['Dashboard'=>'/admin', 'Publication List'=>'/admin/posts', 'Edit Post'=>'#'];
+        return view('admin.posts.edit', ['title' => $title, 'breadcrumbs' => $breadcrumbs, 'categories' => $categories, 'post' => $post, 'tags' => $tags]);
     }
 
     /**
@@ -97,9 +101,18 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->category_id = $request->category_id;
+        $post->is_active = $request->has('is_active');
+
+        $post->save();
+        $post->tags()->toggle($request->tags);
+
+        return redirect(route('posts.index'))->with('success', 'An article has been updated');
     }
 
     /**

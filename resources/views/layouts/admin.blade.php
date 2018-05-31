@@ -36,6 +36,8 @@
     {{--Common App Styles--}}
     <link rel="stylesheet" href="/vendor/normalize.css">
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/select2/css/select2.min.css">
+    
     <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="assets/css/themify-icons.css"> -->
     <!-- <link rel="stylesheet" href="assets/css/flag-icon.min.css"> -->
@@ -80,8 +82,8 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/popper/popper.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- <script src="assets/js/plugins.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    
     <script src="/js/main.js"></script>
 
     {{--Laravel Js Variables--}}

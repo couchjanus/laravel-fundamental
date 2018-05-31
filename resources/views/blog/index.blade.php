@@ -1,9 +1,18 @@
-<?php foreach ($posts as $post) :?>
-
- <div class="blog-post">
-   <h2 class="blog-post-title">{{$post->title}}</h2>               
-   <p class="blog-post-meta">{{$post->created_at}}</p>
-   <a class="button" href="/blog/{{$post->id}}">Read More</a>
- </div><!-- /.blog-post -->
-
-<?php endforeach;?>
+@extends('layouts.blog')
+@section('content')
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+        @each('blog.partials.post', 
+               $posts, 
+               'post', 
+               'blog.partials.post-none'
+            )
+        <hr>
+        {{ $posts->links() }}
+        </div>
+        
+    </div>
+</div>
+@endsection

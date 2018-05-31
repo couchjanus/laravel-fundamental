@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCategoryRequest;
+// use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\CategoryFormRequest;
 
 class CategoryController extends Controller
 {
@@ -32,10 +33,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-      $title = "New Category";
-      $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'New Category'=>'#'];
+        $title = "New Category";
+        $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'New Category'=>'#'];
 
-      return view('admin.categories.create', ['title' => $title, 'breadcrumbs'=>$breadcrumbs]);
+        return view('admin.categories.create', ['title' => $title, 'breadcrumbs'=>$breadcrumbs]);
     }
 
     /**
@@ -44,10 +45,19 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(CategoryFormRequest $request)
     {
-        $category = Category::create($request->all());
-        return redirect(route('categories.index'))->with('success','An category has been added');
+        // $category = Category::create($request->all());
+
+        $category = new Category();
+        $category->name = $request->name;
+
+        $category->active = $request->has('active');
+        $category->description = $request->description;
+
+        $category->save();
+
+        return redirect(route('categories.index'))->with('success', 'An category has been added');
     }
 
     /**
@@ -58,13 +68,13 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-      $category = Category::find($id);
+        $category = Category::find($id);
 
-      $title = "Show Category";
+        $title = "Show Category";
 
-      $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'Show Category'=>'#'];
+        $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'Show Category'=>'#'];
 
-      return view('admin.categories.show')->withCategory($category)->withTitle($title)->withBreadcrumbs($breadcrumbs);
+        return view('admin.categories.show')->withCategory($category)->withTitle($title)->withBreadcrumbs($breadcrumbs);
     }
 
     /**
@@ -75,13 +85,13 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-      $category = Category::find($id);
+        $category = Category::find($id);
 
-      $title = "Edit Category";
+        $title = "Edit Category";
 
-      $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'Edit Category'=>'#'];
+        $breadcrumbs = ['Dashboard'=>'/admin', 'Category List'=>'/admin/categories', 'Edit Category'=>'#'];
 
-      return view('admin.categories.edit')->withCategory($category)->withTitle($title)->withBreadcrumbs($breadcrumbs);
+        return view('admin.categories.edit')->withCategory($category)->withTitle($title)->withBreadcrumbs($breadcrumbs);
     }
 
     /**
@@ -91,27 +101,31 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // public function update(CategoryFormRequest $request, $id)
+    // {
+    //
+    //
+    //     $category = Category::find($id);
+    //
+    //     // $category->name = $request->input('name');
+    //
+    //     // $category->description = $request->description;
+    //
+    //     $category->name = $request->name;
+    //
+    //     $category->active = $request->has('active');
+    // $category->active = $request->active === 'on' ? 1 : 0;
+    //     $category->description = $request->has('description');
+    //
+    //     $category->save();
+    //     return redirect(route('categories.index'))->with('message', 'An category has been updated');
+    // }
+
+
+    public function update(CategoryFormRequest $request, $id)
     {
-
-        $category = Category::find($id);
-
-        $category->name = $request->input('name');
-
-        $category->description = $request->description;
-
-        $category->save();
-
-        // Если есть category Simfony, установить description = PHP Simfony framework.
-        // Если подходящей модели нет, создать новую.
-        // $category = Category::updateOrCreate(['name' => 'Simfony', 'description' => 'PHP Simfony framework']
-          // );
-
-        // После сохранения или создания новой модели, использующей автоматические (autoincrementing) ID, вы можете получать ID объектов, обращаясь к их атрибуту id:
-
-        $insertedId = $category->id;
-
-        return redirect(route('categories.index'))->with('message', 'An category has been updated');
+        Category::updateData($id);
+        return redirect(route('categories.index'))->with('success', 'An category has been updated');
     }
 
     /**

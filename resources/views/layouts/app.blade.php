@@ -9,7 +9,7 @@
         {{--CSRF Token--}}
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        
+
         <script type="text/javascript">
             var _token = '{!! csrf_token() !!}';
             var _url = '{!! url("/") !!}';
@@ -20,12 +20,15 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>App Name - @yield('title')</title>
+        <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
 
         @yield('meta')
-        
-        {{--Common App Styles--}}
+        <!-- Fonts -->
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
 
+        {{--Common App Styles--}}
+        {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
         {{--Styles--}}
         @yield('styles')
 
@@ -35,20 +38,20 @@
     </head>
     <body class="@yield('body_class')">
         {{--Page--}}
-        @yield('navigation')       
-       
+        @yield('navigation')
+
         <!-- Page Content -->
         <div class="container">
             @yield('page')
         </div>
-       
+
         @yield('footer')
-        
+
         {{--Common Scripts--}}
         {{--Laravel Js Variables--}}
         {{--Scripts--}}
 
         @yield('scripts')
-      
+
     </body>
 </html>
