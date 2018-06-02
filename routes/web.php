@@ -107,3 +107,8 @@ Route::post('/contact', 'ContactController@store')->name('contact');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('social/{provider}', 'Auth\SocialController@redirect')->name('social.redirect');
+
+Route::get('social/{provider}/callback', 'Auth\SocialController@handle')->name('social.handle');
+
