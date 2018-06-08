@@ -1,4 +1,7 @@
 @extends('layouts.blog')
+@section('breadcrumb')
+  {!! $breadcrumbs->render() !!} 
+@endsection
 @section('content')
 <!-- Main Content -->
 <div class="container">

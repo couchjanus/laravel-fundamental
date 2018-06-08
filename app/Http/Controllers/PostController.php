@@ -72,9 +72,15 @@ class PostController extends Controller
 
       }
       // Get post for slug.
+       
       $post = Post::whereSlug($slug)->firstOrFail();
+      $this->breadcrumbs
+           ->addCrumb('Blog', 'blog')
+           ->addCrumb($post->title, "");
+      
       return view('blog.show', [
          'post' => $post,
+         'breadcrumbs' => $this->breadcrumbs,
          'hescomment' => true
          ]
      );

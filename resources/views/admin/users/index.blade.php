@@ -30,15 +30,18 @@
 
             <br/>
             <div class="table-responsive">
+              @if($users->count() === 0)
+                <div class="well text-center">No users found.</div>
+              @else
+ 
                   
               <table class="table table-hover">
                 <thead>
                   <tr>
                     <th>#</th>
+                    <th>Online</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -47,10 +50,17 @@
                     @foreach($users as $user)
                     <tr>
                         <td>{{ $user->id }}</td>
+                        <td>
+                          @if($user->isOnline())
+                            <span style="color:green">Online</span>
+                          @else
+                            <span style="color:red">Offline</span>
+                          @endif
+                        </td>
+
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{$user->first_name}}</td>
-                        <td>{{$user->last_name}}</td>
+                        
                         <td>
                             <a title="Show User" href="{{ route('users.show', ['id'=> $user->id]) }}" class="btn btn-primary"><span class="fa fa-newspaper-o"></span></a>
                             <a title="Edit article" href="{{ route('users.edit', ['id'=> $user->id]) }}" class="btn btn-warning"><span class="fa fa-edit"></span></a>
@@ -88,6 +98,7 @@
                     @endforeach
                 </tbody>
               </table>
+              @endif
             </div>
             <!-- Pagination -->
             <div class="pagination justify-content-center mb-4">

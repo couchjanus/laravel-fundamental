@@ -17,6 +17,12 @@ Route::get(
     }
 );
 
+Route::get(
+    '/email', function () {
+        return new App\Mail\ContactEmail();
+    }
+);
+
 Route::get('blog', 'PostController@index');
 
 Route::get(
@@ -85,7 +91,14 @@ Route::get('admin/categories/clear/{id}', 'Admin\CategoryController@clear')->nam
 
 Route::resource('admin/categories', 'Admin\CategoryController');
 
+Route::get('/trashed', 'Admin\UsersManagementController@indexTrashed')->name('users.trashed');
+Route::resource('admin/users', 'Admin\UsersManagementController');
 Route::resource('admin/tags', 'Admin\TagController');
+
+Route::resource('roles', 'Admin\RolesController');
+Route::resource('permissions', 'Admin\PermissionsController');
+
+
 
 // Route::resource(
 //     'posts', 'Admin\PostController', ['names' => [
@@ -101,8 +114,14 @@ Route::resource('admin/tags', 'Admin\TagController');
 //     ]]
 // );
 
-Route::get('/contact', 'ContactController@index');
-Route::post('/contact', 'ContactController@store')->name('contact');
+// Route::get('/contact', 'ContactController@index');
+// Route::post('/contact', 'ContactController@store')->name('contact');
+
+Route::get('contact', ['as' => 'contact', 'uses' => 'ContactController@create']);
+
+
+ Route::post('contact', ['as' => 'contact_send', 'uses' => 'ContactController@send']);
+
 
 Auth::routes();
 
@@ -111,4 +130,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('social/{provider}', 'Auth\SocialController@redirect')->name('social.redirect');
 
 Route::get('social/{provider}/callback', 'Auth\SocialController@handle')->name('social.handle');
+
+Route::get('/verify/token/{token}', 'Auth\VerificationController@verify')->name('auth.verify'); 
+Route::get('/verify/resend', 'Auth\VerificationController@resend')->name('auth.verify.resend');
 

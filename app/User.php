@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Hash;
+use Cache;
+use App\VerificationToken;
 
 class User extends Authenticatable
 {
@@ -19,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'verified'
     ];
 
     /**
@@ -89,6 +91,26 @@ class User extends Authenticatable
         }
 
         return !! $this->roles->intersect($role)->count();
+    }
+
+    public function verificationToken()
+    {
+        return $this->hasOne(VerificationToken::class);
+    }
+
+    public function hasVerifiedEmail()
+    {
+        return $this->verified;
+    }
+
+    public static function byEmail($email)
+    {
+        return static::where('email', $email);
+    }
+
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
     }
 
 }

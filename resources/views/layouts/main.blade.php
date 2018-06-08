@@ -70,6 +70,9 @@
             </div>
         </nav>
 
+        @yield('breadcrumb')        
+        @yield('jumbotron')   
+
         <main class="py-4">
             @yield('content')
         </main>

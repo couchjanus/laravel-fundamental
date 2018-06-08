@@ -39,7 +39,8 @@
     <body class="@yield('body_class')">
         {{--Page--}}
         @yield('navigation')
-
+        @yield('breadcrumb')
+        
         <!-- Page Content -->
         <div class="container">
             @yield('page')
