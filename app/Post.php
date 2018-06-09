@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasComments;
 
 class Post extends Model
 {
     use SoftDeletes;
     use Sluggable;
+    use HasComments;
 
     protected $fillable = ['title', 'content', 'is_active', 'category_id'];
     protected $guarded = ['id'];

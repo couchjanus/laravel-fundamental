@@ -13,7 +13,7 @@
 
 Route::get(
     '/', function () {
-        return view('welcome');
+        return view('index');
     }
 );
 
@@ -23,7 +23,12 @@ Route::get(
     }
 );
 
-Route::get('blog', 'PostController@index');
+// Route::get('blog', 'PostController@index');
+Route::get('blog', function () {
+    return view('blog.index');
+ })->name('blog');
+ 
+Route::get('blogposts', 'PostController@index')->name('blogposts');
 
 Route::get(
     'blog/{slug}', [

@@ -42,14 +42,16 @@
         @yield('breadcrumb')
         
         <!-- Page Content -->
-        <div class="container">
+        <div class="container" id="root">
             @yield('page')
         </div>
 
         @yield('footer')
 
         {{--Common Scripts--}}
+
         {{--Laravel Js Variables--}}
+        <script src="{{ asset('js/app.js') }}"></script>
         {{--Scripts--}}
 
         @yield('scripts')
