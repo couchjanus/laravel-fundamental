@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 use App\Traits\HasComments;
+use Laravel\Scout\Searchable;
+
 
 class Post extends Model
 {
     use SoftDeletes;
     use Sluggable;
     use HasComments;
+    use Searchable;
 
     protected $fillable = ['title', 'content', 'is_active', 'category_id'];
     protected $guarded = ['id'];

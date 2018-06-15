@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Providers;
+namespace App\Repositories;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
-class AppServiceProvider extends ServiceProvider
+class PostServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-        // $this->app->bind('App\Repositories\Contracts\PostRepositoryInterface', 'App\Repositories\PostRepository');
+        $this->app->bind('App\Repositories\PostRepositoryInterface', 'App\Repositories\PostRepository');
     }
 }

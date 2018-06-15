@@ -17,6 +17,8 @@ Route::get(
     }
 );
 
+
+
 Route::get(
     '/email', function () {
         return new App\Mail\ContactEmail();
@@ -35,7 +37,23 @@ Route::get(
         'uses' => 'PostController@show', 'as' => 'show'
         ]
 );
-Route::get('latest', 'PostController@latestPost');
+
+Route::get('/articles', function () {
+    return view('articles.index', [
+        'articles' => App\Entities\Article::all(),
+    ]);
+});
+
+use \App\Repositories\ArticlesRepository;
+
+Route::get('/search', function (ArticlesRepository $repository) {
+    $articles = $repository->search((string) request('q'));
+    return view('articles.index', [
+    	'articles' => $articles,
+    ]);
+});
+
+// Route::get('latest', 'PostController@latestPost');
 // Route::get('oldest', 'PostController@oldestPost');
 
 // Route::get('blog/popular', 'PostController@popular');

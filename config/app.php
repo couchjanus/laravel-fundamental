@@ -165,7 +165,8 @@ return [
         App\Providers\EloquentEventServiceProvider::class,
         App\Providers\BreadcrumsServiceProvider::class,
         App\Providers\OnlineServiceProvider::class,
-
+        App\Repositories\PostServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
     ],
 
     /*

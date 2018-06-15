@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
-use Illuminate\Http\Request;
-use DB;
+use App\Repositories\PostRepositoryInterface;
+// use App\Repositories\PostRepository;
 
-class PostController extends Controller
+use Breadcrumbs;
+
+class PostController
 {
+    protected $post;
+    protected $breadcrumbs;
+
+    // public function __construct(PostRepository $post)
+   
+    public function __construct(PostRepositoryInterface $post)
+    {
+        $this->post = $post;
+        $this->breadcrumbs = Breadcrumbs::addCrumb('Home', '/');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,10 +27,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = DB::table('posts')->simplePaginate(10);
-        // return view('blog.index', ['posts' => $posts]);
-
-        $posts = Post::paginate(10);
+        $posts = $this->post->paginate(10);
 
         $response = [
             'pagination' => [
@@ -34,42 +43,6 @@ class PostController extends Controller
 
         return response()->json($response);
     }
-
-    public function getLatestPosts()
-    {
-        // $posts = DB::table('posts')->orderBy('id', 'desc')->take(5)->get();
-        // $posts = DB::table('posts')->orderBy('id', 'desc')->skip(10)->take(5)->get();
-
-        // $posts = DB::table('posts')
-        //         ->offset(10)
-        //         ->limit(5)
-        //         ->get();
-
-        $posts = App\Post::where('status', 1)
-               ->orderBy('id', 'desc')
-               ->take(10)
-               ->get();
-
-        return view('blog.index', ['posts' => $posts]);
-    }
-
-    public function latestPost()
-    {
-        $post = DB::table('posts')
-                ->latest()
-                ->first();
-        return view('blog.show', ['post' => $post]);
-    }
-
-    public function oldestPost()
-    {
-        $post = DB::table('posts')
-            ->oldest()
-            ->first();
-        return view('blog.show', ['post' => $post]);
-    }
-
-
     /**
      * Display the specified resource.
      *
@@ -78,35 +51,18 @@ class PostController extends Controller
      */
     public function show($slug)
     {
-      if (is_numeric($slug)) {
-
-      // Get post for slug.
-          $post = Post::findOrFail($slug);
-
-          return Redirect::to(route('blog.show', $post->slug), 301);
-           // 301 редирект со старой страницы, на новую.
-
-      }
-      // Get post for slug.
-       
-      $post = Post::whereSlug($slug)->firstOrFail();
-      $this->breadcrumbs
-           ->addCrumb('Blog', 'blog')
-           ->addCrumb($post->title, "");
+        $post = $this->post->findBy('slug', $slug);
+        $this->breadcrumbs
+            ->addCrumb('Blog', 'blog')
+            ->addCrumb($post->title, "");
       
-      return view('blog.show', [
-         'post' => $post,
-         'breadcrumbs' => $this->breadcrumbs,
-         'hescomment' => true
-         ]
-     );
+        return view(
+            'blog.show', 
+            [
+                'post' => $post,
+                'breadcrumbs' => $this->breadcrumbs,
+                'hescomment' => true,
+            ]
+        );
     }
-
-
-    public function getTitle($id)
-    {
-        $title = DB::table('posts')->where('id', $id)->value('title');
-        return $title;
-    }
-
 }

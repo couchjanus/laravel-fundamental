@@ -18,7 +18,7 @@ require('./bootstrap');
 // Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('pagination', require('./components/PaginationComponent.vue'));
 Vue.component('comments',require('./components/comments.vue'));
-
+Vue.component('search',require('./components/Search.vue'));
 // const app = new Vue({
 //     el: '#app'
 // });
